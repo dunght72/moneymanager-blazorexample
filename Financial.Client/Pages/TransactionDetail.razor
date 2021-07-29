@@ -1,0 +1,17 @@
+@page "/TransactionDetail/{TransactionId}"
+@using Financial.Shared.Models
+@inject HttpClient Http;
+
+<TransactionDetailComponent TransactionUpdateModel="@transactionDetail"></TransactionDetailComponent>
+
+@code {
+    [Parameter]
+    public string TransactionId { get; set; }
+
+    private TransactionUpdateModel transactionDetail = new TransactionUpdateModel();
+    protected async override Task OnInitializedAsync()
+    {
+        transactionDetail = await Http.GetFromJsonAsync<TransactionUpdateModel>($"api/transaction/GetTransactionDetail/{TransactionId}");
+    }
+
+}

@@ -1,0 +1,73 @@
+@using Financial.Shared.Models
+@inject HttpClient Http;
+@inject IToastService toastService;
+<MudCard Outlined="true">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">Add New Transaction</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+
+    @if (CategoryModels != null)
+    {
+        <MudCardContent>
+            <EditForm Model="transactionModel" OnValidSubmit="@HandleValidSubmit">
+                <DataAnnotationsValidator></DataAnnotationsValidator>
+                <MudCard>
+                <MudCardContent>
+                    <MudItem sm="12" md="12" Class="py-6">
+                        <MudDatePicker PickerVariant="PickerVariant.Dialog" Date="transactionModel.Date" Label="Date" DateFormat="MM/dd/yyyy" />
+                    </MudItem>
+                    <MudItem sm="12" md="12" Class="py-6">
+                        <MudTextField @bind-Value="transactionModel.Subject" Label="Subject" InputType="InputType.Text" For="@(() => transactionModel.Subject)" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Subject" AdornmentColor="Color.Warning"/>
+                    </MudItem>
+                    <MudItem sm="12" md="12" Class="py-6">
+                        <MudTextField @bind-Value="transactionModel.Amount" InputType="InputType.Number" Label="Amount" For="@(() => transactionModel.Amount)" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.AttachMoney" AdornmentColor="Color.Warning"/>
+                    </MudItem>
+                    <MudItem sm="12" md="12" Class="py-6">
+                        <MudSelect Label="Category" @bind-Value="transactionModel.CategoryId"
+                                   OffsetY="true" OpenIcon="@Icons.Material.Filled.Category" AdornmentColor="Color.Warning" Variant="Variant.Outlined">
+                            <MudSelectItem Value="@(Guid.Empty)">Select Category</MudSelectItem>
+                            @foreach (var item in CategoryModels)
+                            {
+                                <MudSelectItem Value="@item.Id">@item.CategoryName</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Success" EndIcon="@Icons.Material.Filled.Add" >Add New</MudButton>
+                </MudCardActions>
+                </MudCard>
+            </EditForm>
+        </MudCardContent>
+    }
+</MudCard>
+
+@code {
+
+    public TransactionModel transactionModel = new TransactionModel { Date = DateTime.Now };
+
+    [Parameter]
+    public EventCallback OnSubmitAddNew { get; set; }
+
+    [Parameter]
+    public List<CategoryModel> CategoryModels { get; set; } = new List<CategoryModel>();
+
+    protected async override Task OnInitializedAsync()
+    {
+        // CategoryModels = await Http.GetFromJsonAsync<List<CategoryModel>>("api/transaction/getcategories");
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        var responseMessage = await Http.PostAsJsonAsync("api/transaction/addtransaction", transactionModel);
+        if (responseMessage.IsSuccessStatusCode)
+        {
+            toastService.ShowSuccess("Add transaction succesfully!", "Success");
+        }
+        await OnSubmitAddNew.InvokeAsync(transactionModel);
+    }
+
+}
+

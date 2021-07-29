@@ -1,0 +1,6 @@
+﻿<StaticWebAssets Version="1.0">
+  <ContentRoot BasePath="_content/Blazored.Toast" Path="/Users/dunghoang/.nuget/packages/blazored.toast/3.1.2/build/../staticwebassets/" />
+  <ContentRoot BasePath="_content/MudBlazor" Path="/Users/dunghoang/.nuget/packages/mudblazor/5.1.0-dev.1/build/../staticwebassets/" />
+  <ContentRoot BasePath="/" Path="/Volumes/Data/Code/DotNetCore/BlazorTutorial/MoneyManager/Financial.Client/bin/Debug/net5.0/wwwroot/" />
+  <ContentRoot BasePath="/" Path="/Volumes/Data/Code/DotNetCore/BlazorTutorial/MoneyManager/Financial.Client/obj/Debug/net5.0/scopedcss/bundle/" />
+</StaticWebAssets>

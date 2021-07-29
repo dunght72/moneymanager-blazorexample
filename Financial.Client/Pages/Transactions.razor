@@ -1,0 +1,109 @@
+@page "/Transactions"
+@using Financial.Shared.Models
+@using Financial.Shared.Domains
+@inject HttpClient Http
+
+<MudText>Manage Transactions</MudText>
+<MudDivider />
+<MudGrid>
+    <MudItem lg="12" md="12">
+        <SearchComponent OnSearch="@SearchChanged" CategorySearch="@Categories"></SearchComponent>
+    </MudItem>
+    <MudItem md="6" lg="6">
+        <MudCard Outlined="true">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">Transaction List</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                @if (transactionList == null)
+                {
+                    <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+                }
+                else
+                {
+                    <MudTable Items="@transactionList" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+                        <HeaderContent>
+                            <MudTh>Date</MudTh>
+                            <MudTh>Subject</MudTh>
+                            <MudTh>Category</MudTh>
+                            <MudTh>Amount</MudTh>
+                            <MudTh>Action</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Date">@context.Date</MudTd>
+                            <MudTd DataLabel="Subject">@context.Subject</MudTd>
+                            <MudTd DataLabel="CategoryName">@context.CategoryName</MudTd>
+                            <MudTd DataLabel="Amount">@context.Amount</MudTd>
+                            <MudTd DataLabel="Action"><MudIconButton Link="@($"/TransactionDetail/{context.Id}")" Icon="@Icons.Material.Filled.Preview" Color="Color.Info" ></MudIconButton><MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => OpenDeleteDialog(context))" aria-label="delete"></MudIconButton></MudTd>
+                        </RowTemplate>
+                        <PagerContent>
+                            <MudTablePager />
+                        </PagerContent>
+                    </MudTable>
+                    
+                }
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem lg="6" md="6">
+        <NewTransactionComponent OnSubmitAddNew="@Refresh" CategoryModels="@Categories"></NewTransactionComponent>
+    </MudItem>
+</MudGrid>
+
+@if (DeleteDialogOpen)
+{
+    <ModalDialog Title="Are you sure?" Text="Do you want to delete this transaction?" OnClose="@OnDeleteDialogClose"></ModalDialog>
+}
+
+
+@code {
+    private List<TransactionViewModel> transactionList;
+    public bool DeleteDialogOpen { get; set; }
+    private TransactionViewModel transactionToDelete;
+    private List<CategoryModel> Categories = new List<CategoryModel>();
+
+    protected async override Task OnInitializedAsync()
+    {
+        Categories = await Http.GetFromJsonAsync<List<CategoryModel>>("api/transaction/getcategories");   
+        await LoadData();
+    }
+
+    protected async Task LoadData()
+    {
+        transactionList = await Http.GetFromJsonAsync<List<TransactionViewModel>>("api/transaction/gettransactions");
+        StateHasChanged();
+    }
+
+    private async Task OnDeleteDialogClose(bool accepted)
+    {
+        if (accepted)
+        {
+            await Http.DeleteAsync($"api/transaction/RemoveTransaction/{transactionToDelete.Id}");
+            await LoadData();
+            transactionToDelete = null;
+        }
+        DeleteDialogOpen = false;
+    }
+
+    private void OpenDeleteDialog(TransactionViewModel transaction)
+    {
+        transactionToDelete = transaction;
+        DeleteDialogOpen = true;
+        StateHasChanged();
+    }
+
+    protected async void Refresh()
+    {
+        await LoadData();
+    }
+
+    protected async Task SearchChanged(SearchComponent.SearchModel searchModel)
+    {
+        
+        transactionList = await Http.GetFromJsonAsync<List<TransactionViewModel>>($"api/transaction/gettransactions?subject={searchModel.Subject}&categoryid={searchModel.CategoryId}");
+        StateHasChanged();
+    }
+
+}

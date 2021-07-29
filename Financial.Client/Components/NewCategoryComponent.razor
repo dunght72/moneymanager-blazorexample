@@ -1,0 +1,68 @@
+@using Financial.Shared.Models
+@using Microsoft.AspNetCore.Components
+@using Financial.Shared.Domains
+@using Financial.Shared
+@inject HttpClient Http;
+@inject IToastService toastService;
+<MudCard Outlined="true">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">Add New Category</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+
+    
+        <MudCardContent>
+            <EditForm Model="Category" OnValidSubmit="@HandleValidSubmit">
+                <DataAnnotationsValidator></DataAnnotationsValidator>
+                <MudCard>
+                <MudCardContent>
+                    
+                    <MudItem sm="12" md="12">
+                        <MudTextField @bind-Value="Category.CategoryName" Label="Subject" InputType="InputType.Text" For="@(() => Category.CategoryName)" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Subject" AdornmentColor="Color.Warning"/>
+                    </MudItem>
+                    
+                    <MudItem sm="12" md="12" Class="mt-5">
+                        <InputSelect  Class="form-control mt-3" @bind-Value="Category.CategoryType" >
+                            @foreach (var item in Enum.GetValues(typeof(TransactionType)))
+                            {
+                                <option value="@item">@item</option>
+                            }
+                        </InputSelect>
+                    </MudItem>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Success" EndIcon="@Icons.Material.Filled.Add" >Add New</MudButton>
+                </MudCardActions>
+                </MudCard>
+            </EditForm>
+        </MudCardContent>
+    
+</MudCard>
+
+@code {
+
+    public Category Category = new Category();
+
+    [Parameter]
+    public EventCallback OnSubmitAddNew { get; set; }
+
+    
+
+    protected async override Task OnInitializedAsync()
+    {
+        
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        var responseMessage = await Http.PostAsJsonAsync("api/transaction/AddCategory", Category);
+        if (responseMessage.IsSuccessStatusCode)
+        {
+            toastService.ShowSuccess("Add category succesfully!", "Success");
+        }
+        await OnSubmitAddNew.InvokeAsync(Category);
+    }
+
+}
+

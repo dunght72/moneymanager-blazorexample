@@ -1,0 +1,12 @@
+/Volumes/Data/Code/DotNetCore/BlazorTutorial/MoneyManager/Financial.Shared/bin/Debug/net5.0/Financial.Shared.deps.json
+/Volumes/Data/Code/DotNetCore/BlazorTutorial/MoneyManager/Financial.Shared/bin/Debug/net5.0/Financial.Shared.dll
+/Volumes/Data/Code/DotNetCore/BlazorTutorial/MoneyManager/Financial.Shared/bin/Debug/net5.0/ref/Financial.Shared.dll
+/Volumes/Data/Code/DotNetCore/BlazorTutorial/MoneyManager/Financial.Shared/bin/Debug/net5.0/Financial.Shared.pdb
+/Volumes/Data/Code/DotNetCore/BlazorTutorial/MoneyManager/Financial.Shared/obj/Debug/net5.0/Financial.Shared.csproj.AssemblyReference.cache
+/Volumes/Data/Code/DotNetCore/BlazorTutorial/MoneyManager/Financial.Shared/obj/Debug/net5.0/Financial.Shared.GeneratedMSBuildEditorConfig.editorconfig
+/Volumes/Data/Code/DotNetCore/BlazorTutorial/MoneyManager/Financial.Shared/obj/Debug/net5.0/Financial.Shared.AssemblyInfoInputs.cache
+/Volumes/Data/Code/DotNetCore/BlazorTutorial/MoneyManager/Financial.Shared/obj/Debug/net5.0/Financial.Shared.AssemblyInfo.cs
+/Volumes/Data/Code/DotNetCore/BlazorTutorial/MoneyManager/Financial.Shared/obj/Debug/net5.0/Financial.Shared.csproj.CoreCompileInputs.cache
+/Volumes/Data/Code/DotNetCore/BlazorTutorial/MoneyManager/Financial.Shared/obj/Debug/net5.0/Financial.Shared.dll
+/Volumes/Data/Code/DotNetCore/BlazorTutorial/MoneyManager/Financial.Shared/obj/Debug/net5.0/ref/Financial.Shared.dll
+/Volumes/Data/Code/DotNetCore/BlazorTutorial/MoneyManager/Financial.Shared/obj/Debug/net5.0/Financial.Shared.pdb

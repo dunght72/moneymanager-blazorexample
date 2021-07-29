@@ -1,0 +1,55 @@
+@using Financial.Shared.Models
+@inject HttpClient Http;
+
+@if (CategorySearch != null)
+{
+    <EditForm Model="searchModel" OnValidSubmit="HandleSearchSubmit">
+        <MudGrid>
+            <MudItem xl="6" lg="6" md="6" sm="12" Class="py-8">
+                <MudTextField @bind-Value="searchModel.Subject" Label="Search" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="Color.Secondary"/>
+            </MudItem>
+            <MudItem xl="6" lg="6" md="6" sm="12" Class="py-8">
+                <MudSelect T="Guid?" Label="Category" @bind-Value="searchModel.CategoryId"
+                           OffsetY="true" OpenIcon="@Icons.Material.Filled.Category" AdornmentColor="Color.Warning" Variant="Variant.Outlined">
+                    <MudSelectItem T="Guid?" Value="null">Select Category</MudSelectItem>
+                    @foreach (var item in CategorySearch)
+                    {
+                        <MudSelectItem T="Guid?" Value="@item.Id">@item.CategoryName</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem lg="3" md="3" Class="py-4">
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Success" StartIcon="@Icons.Material.Filled.Search">Search</MudButton>
+            </MudItem>
+        </MudGrid>
+    </EditForm>
+}
+
+@code {
+    public SearchModel searchModel { get; set; } = new SearchModel();
+    private List<TransactionViewModel> listTransaction ;
+
+    [Parameter]
+    public EventCallback<SearchModel> OnSearch { get; set; }
+
+    [Parameter]
+    public List<CategoryModel> CategorySearch { get; set;  } = new List<CategoryModel>();
+
+    protected async override Task OnInitializedAsync()
+    {
+        
+    }
+
+    public class SearchModel
+    {
+        public string Subject { get; set; }
+        public Guid? CategoryId { get; set; }
+    }
+
+    private async Task HandleSearchSubmit()
+    {
+        await OnSearch.InvokeAsync(searchModel);
+        
+    }
+
+}

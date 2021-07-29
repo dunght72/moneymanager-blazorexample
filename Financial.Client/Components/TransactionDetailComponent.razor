@@ -1,0 +1,68 @@
+@using Financial.Shared.Models
+@using Financial.Client.Pages
+@inject HttpClient Http;
+@inject NavigationManager NavigationManager;
+@inject IToastService ToastService;
+@if (categoryModels != null) {
+    <EditForm Model="TransactionUpdateModel" OnValidSubmit="@HandleValidUpdate">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <div class="mb-3">
+            <label for="date" class="form-label">Date</label>
+            <InputDate type="date" class="form-control" @bind-Value="TransactionUpdateModel.Date" id="date"></InputDate>
+            <ValidationMessage For="() => TransactionUpdateModel.Date"></ValidationMessage>
+        </div>
+        <div class="mb-3">
+            <label for="subject" class="form-label">Subject</label>
+            <InputText type="text" class="form-control" @bind-Value="TransactionUpdateModel.Subject" id="subject"></InputText>
+            <ValidationMessage For="() => TransactionUpdateModel.Subject"></ValidationMessage>
+        </div>
+        <div class="mb-3">
+            <label for="amount" class="form-label">Amount</label>
+            <InputNumber type="number" class="form-control" @bind-Value="TransactionUpdateModel.Amount" id="amount"></InputNumber>
+            <ValidationMessage For="() => TransactionUpdateModel.Amount"></ValidationMessage>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="category">Category</label>
+            <InputSelect class="form-control" id="category" @bind-Value="TransactionUpdateModel.CategoryId">
+                @foreach (var category in categoryModels)
+                {
+                    <option value="@category.Id">@category.CategoryName</option>
+                }
+                <ValidationMessage For="() => TransactionUpdateModel.CategoryId"></ValidationMessage>
+            </InputSelect>
+
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="button" class="btn btn-warning" @onclick='() => NavigationManager.NavigateTo("/transactions")'>Back</button>
+    </EditForm>
+}
+
+
+@code {
+    [Parameter]
+    public TransactionUpdateModel TransactionUpdateModel { get; set; }
+
+    private TransactionUpdateModel TransactionToUpdate;
+    private List<CategoryModel> categoryModels;
+    public EventCallback OnEditSubmit { get; set; }
+    protected async override Task OnInitializedAsync()
+    {
+        categoryModels = await Http.GetFromJsonAsync<List<CategoryModel>>("api/transaction/getcategories");
+    }
+
+    private async Task HandleValidUpdate()
+    {
+        TransactionToUpdate = TransactionUpdateModel;
+        var response = await Http.PutAsJsonAsync($"api/transaction/updatetransaction/?id={TransactionToUpdate.Id}", TransactionToUpdate);
+        if (response.IsSuccessStatusCode)
+        {
+            ToastService.ShowSuccess("Update successfully!","Success");
+            TransactionToUpdate = null;
+        } else
+        {
+            ToastService.ShowError("Something wrong! Please try again","Error");
+        }
+
+        await OnEditSubmit.InvokeAsync(TransactionUpdateModel);
+    }
+}

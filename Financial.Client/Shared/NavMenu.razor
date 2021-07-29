@@ -1,0 +1,48 @@
+﻿<MudPaper Width="250px" Class="d-inline-flex py-3" >
+    <MudNavMenu Class="mud-width-full">
+        <MudText Typo="Typo.h6" Class="px-4">Money</MudText>
+        <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">Manager</MudText>
+        <MudDivider Class="my-2" />
+        <MudNavLink Href="/" Icon="@Icons.Filled.Dashboard">Dashboard</MudNavLink>
+        <MudNavLink Href="/transactions" Icon="@Icons.Filled.Money">Transactions</MudNavLink>
+        <MudNavLink Href="/categories" Icon="@Icons.Filled.Category">Categories</MudNavLink>
+        <MudNavGroup Title="Settings" Icon="@Icons.Filled.Settings" Expanded="true">
+            <MudNavLink Href="/users" Icon="@Icons.Filled.People" IconColor="Color.Success">Users</MudNavLink>
+            <MudNavLink Href="/security" Icon="@Icons.Filled.Security" IconColor="Color.Info">Security</MudNavLink>
+        </MudNavGroup>
+    </MudNavMenu>
+</MudPaper>
+
+@* <div class="top-row pl-4 navbar navbar-dark"> *@
+@*     <a class="navbar-brand" href="">Financial.Client</a> *@
+@*     <button class="navbar-toggler" @onclick="ToggleNavMenu"> *@
+@*         <span class="navbar-toggler-icon"></span> *@
+@*     </button> *@
+@* </div> *@
+@* *@
+@* <div class="@NavMenuCssClass" @onclick="ToggleNavMenu"> *@
+@*     <ul class="nav flex-column"> *@
+@*         <li class="nav-item px-3"> *@
+@*             <NavLink class="nav-link" href="" Match="NavLinkMatch.All"> *@
+@*                 <span class="oi oi-home" aria-hidden="true"></span> Home *@
+@*             </NavLink> *@
+@*         </li> *@
+@*         <li class="nav-item px-3"> *@
+@*             <NavLink class="nav-link" href="Transactions"> *@
+@*                 <span class="oi oi-plus" aria-hidden="true"></span> Transactions *@
+@*             </NavLink> *@
+@*         </li> *@
+@*         *@
+@*     </ul> *@
+@* </div> *@
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}
